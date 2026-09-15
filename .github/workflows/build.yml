@@ -17,24 +17,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 缓存Gradle
-        uses: actions/cache@v3
+      - name: 配置Gradle环境
+        uses: gradle/actions/setup-gradle@v3
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: gradle-
-
-      - name: 赋予执行权限
-        run: chmod +x gradlew
+          gradle-version: 8.5
 
       - name: 编译APK
-        run: ./gradlew assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon
 
       - name: 上传安装包
         uses: actions/upload-artifact@v4
         with:
           name: 沐-App-安装包
           path: app/build/outputs/apk/debug/app-debug.apk
-
