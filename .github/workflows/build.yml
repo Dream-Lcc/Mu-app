@@ -17,12 +17,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 配置Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          api-level: 34
-          build-tools: 34.0.0
-          accept-android-sdk-licenses: true
+      - name: 安装并接受Android SDK许可
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
       - name: 配置Gradle环境
         uses: gradle/actions/setup-gradle@v3
@@ -30,7 +28,7 @@ jobs:
           gradle-version: 8.5
 
       - name: 编译Debug APK
-        run: gradle assembleDebug
+        run: gradle assembleDebug --no-daemon
 
       - name: 上传安装包
         uses: actions/upload-artifact@v4
